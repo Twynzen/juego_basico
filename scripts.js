@@ -77,7 +77,7 @@ function drawBall() {
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "blue";
     ctx.fill();
     ctx.closePath();
 }
@@ -94,11 +94,12 @@ function draw() {
       dy = -dy;
   } else if(y + dy > canvas.height-ballRadius) {
 
-      vallmas()
+
       if(x > paddleX && x < paddleX + paddleWidth) {
 
           dy = -dy;
-
+          dx++;
+          dy--;
       }
       else {
 
@@ -110,16 +111,11 @@ function draw() {
     dx = -dx;
   }
   if(rightPressed && paddleX < canvas.width-paddleWidth) {
-    paddleX += 5;
+    paddleX += 7;
 }
 else if(leftPressed && paddleX > 0) {
-    paddleX -= 5;
+    paddleX -= 7;
  }
-}
-function vallmas() {
-  velball--;
-  setInterval(draw, velball);
-  console.log(velball);
 }
 
 
@@ -129,4 +125,4 @@ function vallmas() {
 //para repetir un ntervalo de forma establecida
 
 
-setInterval(draw, velball);
+setInterval(draw, 14);

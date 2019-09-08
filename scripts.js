@@ -37,7 +37,7 @@ function drawBricks() {
             bricks[c][r].x = brickX;
             bricks[c][r].y = brickY;
             ctx.beginPath();
-            ctx.rect(0, 0, brickWidth, brickHeight);
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
             ctx.fillStyle = "red";
             ctx.fill();
             ctx.closePath();
@@ -47,6 +47,7 @@ function drawBricks() {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+
 
 function keyDownHandler(e) {
     if(e.keyCode == 39) {
@@ -65,7 +66,16 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 }
-
+function collisionDetection() {
+    for(c=0; c<brickColumnCount; c++) {
+        for(r=0; r<brickRowCount; r++) {
+            var b = bricks[c][r];
+            if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+                dy = -dy;
+            }
+        }
+    }
+}
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -81,6 +91,8 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 }
+
+
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

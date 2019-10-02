@@ -20,12 +20,13 @@ var brickHeight = 20;
 var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
+var color = "green";
 //guardamos los ladrillso en una matriz bidimencional
 var bricks = [];
 for(c=0; c<brickColumnCount; c++) {
     bricks[c] = [];
     for(r=0; r<brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0 };
+        bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
 }
 document.addEventListener("keydown", keyDownHandler, false);
@@ -54,9 +55,19 @@ function collisionDetection() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
             var b = bricks[c][r];
+            if (b.status == 1) {
+
             if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
                 dy = -dy;
+                b.status = 0;
+
+                if (color == "green") {
+                  color= "#01DFA5";
+                }else{
+                  color = "green";
+                }
             }
+          }
         }
     }
 }
@@ -64,7 +75,7 @@ function collisionDetection() {
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "green";
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
 }
@@ -80,6 +91,7 @@ function drawPaddle() {
 function drawBricks() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
+          if (bricks[c][r].status == 1) {
           var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
           var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
             bricks[c][r].x = brickX;
@@ -89,6 +101,7 @@ function drawBricks() {
             ctx.fillStyle = "red";
             ctx.fill();
             ctx.closePath();
+            }
         }
     }
 }
@@ -118,9 +131,8 @@ function draw() {
           dy--;
       }
       else {
-
-          alert("Perdiste preciosaaa");
           document.location.reload();
+          alert("Perdiste preciosaaa");
       }
   }
 

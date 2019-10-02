@@ -3,8 +3,8 @@ var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var x = canvas.width/2;
 var y = canvas.height-30;
-var dx = 2;
-var dy = -2;
+var dx = 4;
+var dy = -4;
 var ballRadius = 10;
 var paddleHeight = 10;
 var paddleWidth = 75;
@@ -12,6 +12,8 @@ var paddleX = (canvas.width-paddleWidth)/2;
 var rightPressed = false;
 var leftPressed = false;
 var velball = 20;
+var score = 0;
+var lives = 3;
 //bloques para romper
 var brickRowCount = 3;
 var brickColumnCount = 5;
@@ -60,16 +62,31 @@ function collisionDetection() {
             if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
                 dy = -dy;
                 b.status = 0;
+                score+=2;
 
                 if (color == "green") {
                   color= "#01DFA5";
                 }else{
                   color = "green";
                 }
+                if(score == (brickRowCount*brickColumnCount)*2) {
+                        document.location.reload();
+                        alert("Ganaste!! te felicito!, tu puntaje es de: "+score);
+                    }
             }
           }
         }
     }
+}
+function drawScore(){
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "black";
+  ctx.fillText("Puntaje: "+score, 8, 20);
+}
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
 
 function drawBall() {
@@ -114,6 +131,8 @@ function draw() {
     drawBall();
     drawPaddle();
     collisionDetection();
+    drawScore();
+    drawLives();
 
 
     //si golpea la parte superior, invertir la dirección de la pelota
@@ -127,12 +146,22 @@ function draw() {
       if(x > paddleX && x < paddleX + paddleWidth) {
 
           dy = -dy;
-          dx++;
-          dy--;
+          dx+=2;
+          dy-=2;
+
       }
-      else {
+
+      else if(!lives) {
           document.location.reload();
-          alert("Perdiste preciosaaa");
+          alert("Perdiste preciosaaa tu puntaje es de: "+score);
+      }else {
+            lives--;
+        x = canvas.width/2;
+        y = canvas.height-30;
+        dx = 4;
+        dy = -4;
+        paddleX = (canvas.width-paddleWidth)/2;
+
       }
   }
 
@@ -144,6 +173,7 @@ else if(leftPressed && paddleX > 0) {
  }
  x += dx;
  y += dy;
+ requestAnimationFrame(draw);
 }
 
 
@@ -153,4 +183,4 @@ else if(leftPressed && paddleX > 0) {
 //para repetir un ntervalo de forma establecida
 
 
-setInterval(draw, 14);
+draw();
